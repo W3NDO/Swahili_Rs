@@ -1,10 +1,11 @@
 /**
  * represents the exact line/colNumber/File position for the lexer, parser and interpreter
  */
+#[path = "./lexeme.rs"]
 mod lexeme;
 
-struct Position {
-    idx: i64,         //index(position) in the text content
+pub struct Position {
+    pub idx: i64,     //index(position) in the text content
     lineNumber: i64,  //line number
     colNumber: i64,   //column number
     fileName: String, //current file name
@@ -13,7 +14,7 @@ struct Position {
 
 impl Position {
     //static method
-    fn new(
+    pub fn new(
         idx: i64,
         lineNumber: i64,
         colNumber: i64,
@@ -29,26 +30,25 @@ impl Position {
         }
     }
 
-    fn advance(&self, currentChar: Option<char> = None ) -> Position{
-        self.idx ++;
-        self.colNumber++;
-        
-        lineEnding = lexeme::lexemes.get("lineEndings").unwrap();
-        if (currentChar.is_match(lineEnding)){
-            self.lineNumber++;
+    pub fn advance(&self, currentChar: Option<char>) -> &Position {
+        self.idx += 1;
+        self.colNumber += 1;
+        let lexemes = lexeme::Lexemes();
+        let lineEnding = lexemes.get("lineEndings").unwrap();
+        if (lineEnding.is_match(currentChar.unwrap_or(None))) {
+            self.lineNumber += 1;
             self.colNumber = 0;
         }
-
         return self;
     }
 
-    fn copy(&self) -> Position{
-        return Postion{
+    pub fn copy(&self) -> Position {
+        return Position {
             idx: self.idx,
             lineNumber: self.lineNumber,
             colNumber: self.colNumber,
             fileName: self.fileName,
-            fileText: self.fileText
+            fileText: self.fileText,
         };
     }
 }

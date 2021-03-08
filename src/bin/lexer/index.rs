@@ -1,88 +1,94 @@
 mod keyword_lexemes;
-mod lexemes;
+mod lexeme;
 mod tokenTypes;
-
 mod position;
-mod tokens;
+mod token;
 
-use std::env; /** for command line entries */
+/** for command line entries */
+use std::env;
+use std::convert::TryInto;
 
-//need to get a module for interpreter errors.
+pub fn Lexer() {
+    let lexemes = lexeme::Lexemes();
+    let keyword_lexemes = keyword_lexemes::Keyword_lexemes();
 
-let lexemes = lexemes::Lexemes();
-let keyword_lexemes = keyword_lexemes::Keyword_lexemes();
+    println!("Hello Lexer");
+}
 
 struct Lexer {
     fileName: String,
     position: position::Position,
     currentChar: Option<char>,
-    text: String
+    text: String,
 }
 
 impl Lexer {
-    fn new(&self, fileName: String, text: String) -> Lexer{
+    fn new(&self, fileName: String, text: String) -> Lexer {
         let mut text_clone = text.clone();
         let fileName_clone = fileName.clone();
-        let semi = lexeme::Lexemes.get("semi").unwrap();
-        let line = lexeme::Lexemes.get("line").unwrap();
+        let lexemes = lexeme::Lexemes();
+        let semi = lexemes.get("semi").unwrap();
+        let line = lexemes.get("line").unwrap();
 
-//lex.line.replace_all(str, new_str)
-        if (fileName == "<stdin>"){
-            text_clone = semi.replace_all(text_clone, "\n" );
+        //lex.line.replace_all(str, new_str)
+        if (fileName == "<stdin>") {
+            text_clone = semi.replace_all(&text_clone, "\n").to_string();
         }
-        
-        text_clone = line.replace(text_clone, "@");
+        text_clone = line.replace_all(&text_clone, "@").to_string();
 
-        let lexer = Lexer{
+        let lexer = Lexer {
             fileName: fileName_clone,
-            position: position::Position::new(-1,0,-1, fileName, text),
+            position: position::Position::new(-1, 0, -1, fileName, text),
             currentChar: None,
-            text: text_clone
-        }
+            text: text_clone,
+        };
 
-        self.advnace();
+        self.advance();
+
+        return *self;
     }
     //get cli colors lib from crates
 
-    fn advance(&self){
+    fn advance(&self) {
         self.position.advance(self.currentChar);
-        self.currentChar = if (self.position.idx < self.text.len()){
-            &self.text[self.position.idx];
-        } else{
-            None;
+        if (self.position.idx < self.text.len().try_into().unwrap()) {
+            self.currentChar = self.text[self.position.idx];
+        } else {
+            self.currentChar = None;
         }
     }
 
-    fn makeNumber(&self) -> token::Token<T> {
+    fn makeNumber(&self) -> token::Token::<T> {
         let mut numStr = String::new();
         let mut dotCount: usize = 0;
         let posStart = self.position.copy();
-        let digits = lexeme::Lexemes.get("digits").unwrap();
-        let dot = lexeme::Lexemes.get("dot").unwarp();
-        let int = tokenTypes::TokenTypes.get("INT");
-        let float = tokenTypes::TokenTypes.get("FLOAT");
+        let lexeme = lexeme::Lexemes();
+        let token_type = tokenTypes::TokenTypes();
+        let digits = lexeme.get("digits").unwrap();
+        let dot = lexeme.get("dot").unwrap();
+        let int = token_type.get("INT");
+        let float = token_type.get("FLOAT");
 
         /** Keep going while character is a digit or a dot, and we haven't seen a dot yet */
-
-        while(self.currentChar != None && (digits.is_match(self.currentChar) || dot.is_match(self.currentChar) )){
-            if (dot.is_match(self.currentChar)){
-                if (dotCount == 1){
+        while (self.currentChar != None
+            && (digits.is_match(self.currentChar.unwrap()) || dot.is_match(self.currentChar.unwrap())))
+        {
+            if dot.is_match(self.currentChar.unwrap()) {
+                if dotCount == 1 {
                     break;
                 }
                 dotCount += 1;
             }
 
-            numStr.push(self.currentChar);
+            numStr.push(self.currentChar.unwrap());
             self.advance();
         }
 
         //Check if INT or FLOAT
-        if (dotCount == 0){
-            return token::Token::new(int, numStr.parse::<i64>().unwrap(), posStart, self.position)
-        } else{
-            return token::Token::new(int, numStr.parse::<f64>().unwrap(), posStart, self.position)
+        if dotCount == 0 {
+            return token::<i64>Token::<i64>new(int, numStr.parse::<i64>().unwrap(), posStart, self.position);
+        } else {
+            return token::<f64>Token::<f64>new(int, numStr.parse::<f64>().unwrap(), posStart, self.position);
         }
     }
-
-
 }

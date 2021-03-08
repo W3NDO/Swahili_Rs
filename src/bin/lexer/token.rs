@@ -1,42 +1,46 @@
 /**
  * smallest recognizable component of the programming language
  */
+#[path = "./position.rs"]
 mod position;
 
-
-struct Token<T>{
-    type: String,
+pub struct Token<T> {
+    token_type: String,
     value: T,
     posStart: position::Position,
-    posEnd: position::Position
+    posEnd: position::Position,
 }
 
-impl<T> Token<T>{
-    fn new(type: String, value: Option<T> = None, posStart: Option<Position>, posEnd: Option<Position> = None ) -> Token<T>{
-        let mut new_token = Token{
-            type: type,
+impl<T> Token<T> {
+    fn new(
+        TT: String,
+        value: Option<T>,
+        posStart: Option<position::Position>,
+        posEnd: Option<position::Position>,
+    ) -> Token<T> {
+        let mut new_token = Token::<T> {
+            token_type: TT,
             value: value,
-            posStart: posStart,
-            posEnd: posEnd
+            posStart: posStart.unwrap(),
+            posEnd: posEnd.unwrap(),
+        };
+
+        if (posStart.unwrap() != None) {
+            new_token.posStart = posStart.unwrap();
+            new_token.posEnd = posStart.unwrap().copy();
+            new_token.posEnd.advance(None);
         }
 
-        if(posStart){
-            new_token.posStart = posStart;
-            new_token.posEnd = posStart.copy();
-            new_token.posEnd.advance();
-        }
-
-        if(posEnd) {
-            new_token.posEnd = posEnd;
+        if (posEnd.unwrap() != None) {
+            new_token.posEnd = posEnd.unwrap();
         }
         return new_token;
     }
 
-    fn matches(&self, type: String, value: Option<T>) -> bool{
-        return self.type == type && self.value == value
+    fn matches(&self, TT: String, value: Option<T>) -> bool {
+        return self.token_type == TT && self.value == value;
     }
 
-    fn to_string(){ //TBD
-
+    fn to_string() { //TBD
     }
 }
