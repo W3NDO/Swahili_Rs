@@ -71,9 +71,9 @@ impl Lexer {
 
         /** Keep going while character is a digit or a dot, and we haven't seen a dot yet */
         while (self.currentChar != None
-            && (digits.is_match(self.currentChar.unwrap()) || dot.is_match(self.currentChar.unwrap())))
+            && (digits.is_match(&self.currentChar.unwrap().to_string()) || dot.is_match(&self.currentChar.unwrap().to_string())))
         {
-            if dot.is_match(self.currentChar.unwrap()) {
+            if dot.is_match(&self.currentChar.unwrap().to_string()) {
                 if dotCount == 1 {
                     break;
                 }

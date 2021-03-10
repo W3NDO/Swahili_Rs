@@ -4,6 +4,7 @@
 #[path = "./position.rs"]
 mod position;
 
+#[derive(PartialEq)]
 pub struct Token<T> {
     token_type: String,
     value: T,
@@ -25,19 +26,19 @@ impl<T> Token<T> {
             posEnd: posEnd.unwrap(),
         };
 
-        if (posStart.unwrap() != None) {
-            new_token.posStart = posStart.unwrap();
-            new_token.posEnd = posStart.unwrap().copy();
-            new_token.posEnd.advance(None);
+        if posStart.is_some(){
+           new_token.posStart = posStart.unwrap();
+           new_token.posEnd = posStart.unwrap().copy();
+           new_token.posEnd.advance(None);
         }
 
-        if (posEnd.unwrap() != None) {
-            new_token.posEnd = posEnd.unwrap();
+        if posEnd.is_some() {
+           new_token.posEnd = posEnd.unwrap();
         }
         return new_token;
     }
 
-    fn matches(&self, TT: String, value: Option<T>) -> bool {
+    fn matches(&self, TT: String, value: Option<Box<T>>) -> bool {
         return self.token_type == TT && self.value == value;
     }
 
