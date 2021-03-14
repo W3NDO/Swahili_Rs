@@ -52,7 +52,7 @@ impl Lexer {
     fn advance(&self) {
         self.position.advance(self.currentChar);
         if (self.position.idx < self.text.len().try_into().unwrap()) {
-            self.currentChar = self.text[self.position.idx];
+            self.currentChar = Some(self.text.chars().nth(self.position.idx.try_into().unwrap()).unwrap());
         } else {
             self.currentChar = None;
         }
