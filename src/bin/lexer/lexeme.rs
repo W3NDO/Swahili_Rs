@@ -8,7 +8,7 @@ pub fn Lexemes() -> HashMap<String, Regex> {
     lexemes.insert(String::from("digits"), Regex::new(r"[0-9]").unwrap());
     lexemes.insert(String::from("alpha"), Regex::new(r"[[:aplha:]]").unwrap());
     lexemes.insert(String::from("dot"), Regex::new(r"\.").unwrap());
-    //lexemes.insert(String::from("doubleQuotes"), Regex::new(r" \"" ").unwrap());
+    lexemes.insert(String::from("doubleQuotes"), Regex::new(r"").unwrap());
     lexemes.insert(String::from("plus"), Regex::new(r"[\+]").unwrap());
     lexemes.insert(String::from("hyphen"), Regex::new(r"[\-]").unwrap());
     lexemes.insert(String::from("asterisk"), Regex::new(r"[\*]").unwrap());

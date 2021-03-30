@@ -36,11 +36,19 @@ impl Position {
         self.colNumber += 1;
         let lexemes = lexeme::Lexemes();
         let lineEnding = lexemes.get("lineEndings").unwrap();
-        if (lineEnding.is_match(&currentChar.unwrap_or(None).to_string())) {
+        /*if (lineEnding.is_match(&currentChar.unwrap_or(None).to_string())) {
             self.lineNumber += 1;
             self.colNumber = 0;
+        } */
+
+        match lineEnding{
+            lineEnding.is_match(&currentChar.unwrap().to_string()) => {
+                self.lineNumber += 1;
+                self.colNumber += 0;
+                return self;
+            }
+            _ => return self;
         }
-        return self;
     }
 
     pub fn copy(&self) -> Position {

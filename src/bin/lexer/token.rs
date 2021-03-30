@@ -26,14 +26,14 @@ impl<T> Token<T> {
             posEnd: posEnd.unwrap(),
         };
 
-        if posStart.is_some(){
-           new_token.posStart = posStart.unwrap();
-           new_token.posEnd = posStart.unwrap().copy();
-           new_token.posEnd.advance(None);
+        if posStart.is_some() {
+            new_token.posStart = posStart.unwrap();
+            new_token.posEnd = posStart.unwrap().copy();
+            new_token.posEnd.advance(None);
         }
 
         if posEnd.is_some() {
-           new_token.posEnd = posEnd.unwrap();
+            new_token.posEnd = posEnd.unwrap();
         }
         return new_token;
     }
