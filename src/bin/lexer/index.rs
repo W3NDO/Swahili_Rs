@@ -140,7 +140,7 @@ impl Lexer {
             (digits.is_match(&self.currentChar.unwrap().to_string()) || 
               alpha.is_match(&self.currentChar.unwrap().to_string())
         ) {
-            idStr.push(self.currentChar.unwrap())
+            idStr.push(self.currentChar.unwrap());
             self.advance();
         }
 
@@ -148,7 +148,7 @@ impl Lexer {
         let tokType = match keywords.get(&idStr){
             Some(keyword) => token_type.get("KEYWORD"),
             None => token_type.get("IDENTIFIER")
-        }
+        };
 
         return token::<String>Token::<String>new(tokType, idStr, posStart, self.position);
     }
