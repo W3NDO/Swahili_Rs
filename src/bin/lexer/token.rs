@@ -5,38 +5,45 @@ mod position;
 
 
 struct Token<T>{
-    type: String,
+    tok_type: String,
     value: T,
     posStart: position::Position,
     posEnd: position::Position
 }
 
 impl<T> Token<T>{
-    fn new(type: String, value: Option<T> = None, posStart: Option<Position>, posEnd: Option<Position> = None ) -> Token<T>{
+    fn new(tok_type: String, value: Option<T>, posStart: Option<Position>, posEnd: Option<Position> ) -> Token<T>{
         let mut new_token = Token{
-            type: type,
-            value: value,
-            posStart: posStart,
-            posEnd: posEnd
+            tok_type,
+            value,
+            posStart,
+            posEnd
+        };
+
+        match posStart {
+            Some(posStart) => {
+                new_token.posStart = posStart;
+                new_token.posEnd = posStart.copy();
+                new_token.posEnd.advance();
+            },
+            _ => println!("no posStart given")
         }
 
-        if(posStart){
-            new_token.posStart = posStart;
-            new_token.posEnd = posStart.copy();
-            new_token.posEnd.advance();
+        match posEnd {
+            Some(posEnd) => {
+                new_token.posEnd = posEnd;
+            },
+            _ => println!("no posEnd given")
         }
 
-        if(posEnd) {
-            new_token.posEnd = posEnd;
-        }
         return new_token;
     }
 
-    fn matches(&self, type: String, value: Option<T>) -> bool{
-        return self.type == type && self.value == value
+    fn matches(&self, tok_type: String, value: Option<T>) -> bool{
+        return self.tok_type == tok_type && self.value == value
     }
 
-    fn to_string(){ //TBD
+    fn to_string(){ //TODO colors stuff here
 
     }
 }
